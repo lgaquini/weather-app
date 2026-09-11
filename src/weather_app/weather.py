@@ -47,13 +47,13 @@ def get_city_data(city_info: dict[str, Any]) -> dict[str, Any]:
     Get the temperature data for the city, using latitude and longitude as input.
     """
     latitude = city_info["results"][0]["latitude"]
-    longitute = city_info["results"][0]["longitude"]
+    longitude = city_info["results"][0]["longitude"]
 
     request = requests.get(
         temperature_url,
         params={
             "latitude": latitude,
-            "longitude": longitute,
+            "longitude": longitude,
             "timezone": "auto",
             "current": "temperature_2m,relative_humidity_2m,weather_code",
         },
@@ -63,6 +63,9 @@ def get_city_data(city_info: dict[str, Any]) -> dict[str, Any]:
 
 
 def print_info_user(data: dict[str, Any]):
+    """
+    Show the information of the place to the user.
+    """
     print(
         "TEMPERATURA: ",
         data["current"]["temperature_2m"],
