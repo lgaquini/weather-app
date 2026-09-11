@@ -1,12 +1,10 @@
 [project]
 name = "weather-app"
 version = "0.1.0"
-description = "Add your description here"
+description = "Simple weather app written in Python."
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = [
-    "requests>=2.34.2",
-]
+dependencies = ["requests>=2.34.2"]
 
 [project.scripts]
 weather-app = "weather_app:main"

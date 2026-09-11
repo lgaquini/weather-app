@@ -71,6 +71,9 @@ def print_info_user(data: dict[str, Any]):
         data["current"]["temperature_2m"],
         data["current_units"]["temperature_2m"],
     )
+
+    print("UMIDADE: ", data["current"]["relative_humidity_2m"])
+
     codigo: int = int(data["current"]["weather_code"])
     descricao: str = WEATHER_CODES.get(codigo, f"Código desconhecido ({codigo})")
     print(descricao)
