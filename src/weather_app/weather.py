@@ -2,10 +2,10 @@ from typing import Any
 
 import requests
 
-position_url = "https://geocoding-api.open-meteo.com/v1/search"
-temperature_url = "https://api.open-meteo.com/v1/forecast"
+position_url: str = "https://geocoding-api.open-meteo.com/v1/search"
+temperature_url: str = "https://api.open-meteo.com/v1/forecast"
 
-WEATHER_CODES = {
+WEATHER_CODES: dict[int, str] = {
     0: "Céu limpo",
     1: "Predominantemente limpo",
     2: "Parcialmente nublado",
@@ -75,6 +75,6 @@ def print_info_user(data: dict[str, Any]):
 
 chosen_city: str = input("Digite o nome da sua cidade:").strip()
 
-city_info = get_city_info(chosen_city)
+city_info: dict[str, Any] = get_city_info(chosen_city)
 
 print_info_user(get_city_data(city_info))
