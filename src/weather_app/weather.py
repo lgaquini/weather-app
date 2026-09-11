@@ -18,7 +18,7 @@ def get_city_info(city_name: str) -> dict[str, Any]:
     return request.json()
 
 
-def get_city_data(city_info: dict[str, Any]):
+def get_city_data(city_info: dict[str, Any]) -> dict[str, Any]:
     """
     Get the temperature data for the city, using latitude and longitude as input.
     """
@@ -33,12 +33,21 @@ def get_city_data(city_info: dict[str, Any]):
             "timezone": "auto",
             "current": "temperature_2m,relative_humidity_2m,weather_code",
         },
+        timeout=10,
     )
     return request.json()
 
 
-chosen_city: str = str(input("Digite o nome da sua cidade:"))
+def print_info_user(data: dict[str, Any]):
+    print(
+        "TEMPERATURA: ",
+        data["current"]["temperature_2m"],
+        data["current_units"]["temperature_2m"],
+    )
+
+
+chosen_city: str = input("Digite o nome da sua cidade:").strip()
 
 city_info = get_city_info(chosen_city)
 
-print(get_city_data(city_info))
+print_info_user(get_city_data(city_info))
