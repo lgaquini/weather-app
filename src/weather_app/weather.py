@@ -34,32 +34,45 @@ def get_city_info(city_name: str) -> dict[str, Any]:
     """
     Get the city information based on the name.
     """
-    request = requests.get(
-        position_url,
-        params={"name": city_name, "count": 1, "language": "pt", "format": "json"},
-        timeout=10,
-    )
-    return request.json()
+    try:
+        request = requests.get(
+            position_url,
+            params={"name": city_name, "count": 1, "language": "pt", "format": "json"},
+            timeout=10,
+        )
+        request.raise_for_status()  # Verifica por erros na requisição
+        return request.json()
+    except requests.exceptions.RequestException as e:
+        raise SystemExit(e)
 
 
 def get_city_data(city_info: dict[str, Any]) -> dict[str, Any]:
     """
     Get the temperature data for the city, using latitude and longitude as input.
     """
+
+    # Verificação se a cidade existe
+    if "results" not in city_info:
+        raise SystemExit("Cidade não encontrada.")
+
     latitude = city_info["results"][0]["latitude"]
     longitude = city_info["results"][0]["longitude"]
 
-    request = requests.get(
-        temperature_url,
-        params={
-            "latitude": latitude,
-            "longitude": longitude,
-            "timezone": "auto",
-            "current": "temperature_2m,relative_humidity_2m,weather_code",
-        },
-        timeout=10,
-    )
-    return request.json()
+    try:
+        request = requests.get(
+            temperature_url,
+            params={
+                "latitude": latitude,
+                "longitude": longitude,
+                "timezone": "auto",
+                "current": "temperature_2m,relative_humidity_2m,weather_code",
+            },
+            timeout=10,
+        )
+        request.raise_for_status()  # Verifica por erros na requisição
+        return request.json()
+    except requests.exceptions.RequestException as e:
+        raise SystemExit(e)
 
 
 def print_info_user(data: dict[str, Any]):
@@ -77,10 +90,3 @@ def print_info_user(data: dict[str, Any]):
     codigo: int = int(data["current"]["weather_code"])
     descricao: str = WEATHER_CODES.get(codigo, f"Código desconhecido ({codigo})")
     print(descricao)
-
-
-chosen_city: str = input("Digite o nome da sua cidade:").strip()
-
-city_info: dict[str, Any] = get_city_info(chosen_city)
-
-print_info_user(get_city_data(city_info))
