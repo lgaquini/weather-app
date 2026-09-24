@@ -1,6 +1,54 @@
-from typing import Any
+from typing import TypedDict
 
 import requests
+
+
+class city_result(TypedDict):
+    id: int
+    name: str
+    latitude: float
+    longitude: float
+    elevation: float
+    feature_code: str
+    country_code: str
+    timezone: str
+    population: int
+    country: str
+    admin1: str
+
+
+class response_position(TypedDict):
+    results: list[city_result]
+    generationtime_ms: float
+
+
+class current_units(TypedDict):
+    time: str
+    interval: str
+    temperature_2m: str
+    relative_humidity_2m: str
+    weather_code: str
+
+
+class current(TypedDict):
+    time: str
+    interval: int
+    temperature_2m: float
+    relative_humidity_2m: int
+    weather_code: int
+
+
+class response_temperature(TypedDict):
+    latitude: float
+    longitude: float
+    generationtime_ms: float
+    utc_offset_seconds: int
+    timezone: str
+    timezone_abbreviation: str
+    elevation: float
+    current_units: current_units
+    current: current
+
 
 position_url: str = "https://geocoding-api.open-meteo.com/v1/search"
 temperature_url: str = "https://api.open-meteo.com/v1/forecast"
@@ -30,7 +78,7 @@ WEATHER_CODES: dict[int, str] = {
 }
 
 
-def get_city_info(city_name: str) -> dict[str, Any]:
+def get_city_info(city_name: str) -> response_position:
     """
     Get the city information based on the name.
     """
@@ -46,7 +94,7 @@ def get_city_info(city_name: str) -> dict[str, Any]:
         raise SystemExit(e)
 
 
-def get_city_data(city_info: dict[str, Any]) -> dict[str, Any]:
+def get_city_data(city_info: response_position) -> response_temperature:
     """
     Get the temperature data for the city, using latitude and longitude as input.
     """
@@ -75,7 +123,7 @@ def get_city_data(city_info: dict[str, Any]) -> dict[str, Any]:
         raise SystemExit(e)
 
 
-def print_info_user(data: dict[str, Any]):
+def print_info_user(data: response_temperature):
     """
     Show the information of the place to the user.
     """
@@ -87,6 +135,6 @@ def print_info_user(data: dict[str, Any]):
 
     print("UMIDADE: ", data["current"]["relative_humidity_2m"])
 
-    codigo: int = int(data["current"]["weather_code"])
+    codigo = int(data["current"]["weather_code"])
     descricao: str = WEATHER_CODES.get(codigo, f"Código desconhecido ({codigo})")
     print(descricao)
