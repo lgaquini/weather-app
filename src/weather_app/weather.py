@@ -1,6 +1,11 @@
-from typing import Any
+from typing import Any, TypedDict
 
 import requests
+
+
+class response(TypedDict):
+    pass
+
 
 position_url: str = "https://geocoding-api.open-meteo.com/v1/search"
 temperature_url: str = "https://api.open-meteo.com/v1/forecast"
